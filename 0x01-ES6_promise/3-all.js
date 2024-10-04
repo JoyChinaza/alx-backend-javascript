@@ -1,20 +1,11 @@
-import { uploadPhoto, createUser } from './utils.js';
+import { uploadPhoto, createUser } from './utils';
 
-function handleProfileSignup() {
-  return Promise.all([uploadPhoto(), createUser()])
-    .then(([photoResponse, userResponse]) => {
-      if (photoResponse.body && userResponse.firstName && userResponse.lastName) {
-        console.log(`${photoResponse.body} ${userResponse.firstName} ${userResponse.lastName}`);
-        return { photo: photoResponse, user: userResponse };
-      } else {
-        throw new Error('Incomplete response data');
-      }
-    })
-    .catch((error) => {
-      console.log('Signup system offline');
-      console.error('Error details:', error);
-      return null;
-    });
+export default function handleProfileSignup() {
+  const p1 = uploadPhoto();
+  const p2 = createUser();
+
+  return Promise.all([p1, p2]).then((value) => {
+    console.log(`${value[0].body} ${value[1].firstName} ${value[1].lastName}`);
+  })
+    .catch(() => { console.log('Signup system offline'); });
 }
-
-export default handleProfileSignup;
